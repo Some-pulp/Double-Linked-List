@@ -85,11 +85,23 @@ char TextClass::deleteTail() {
 
 bool TextClass::findKey(char key) {
     Link* tmp = iter;
-
+    
     //If nothing has been found
     if(iter == nullptr){
         iter = head;
         tmp = head;
+    }
+    else{
+        if(iter->getNext() != nullptr) {
+            tmp = iter;
+            iter = iter->getNext();
+            
+        }
+        else{
+            tmp = iter;
+            iter = head;
+        }
+        
     }
     //If the value is found
     if(iter->getVal() == key) {
@@ -98,39 +110,36 @@ bool TextClass::findKey(char key) {
     else{
         iter = iter->getNext();
     }
-
-
+    
+    
     //Until iter reaches it's starting point (tmp)
     while(iter != tmp){
         if(iter->getVal() == key) {
             return true;
         }
-
+        
         //if next is nullptr, wrap back to head
         if(iter->getNext() == nullptr) {
             iter = head;
         }
-
-
-
+        
+        
+        
         iter = iter->getNext();
     }
     iter = nullptr;
     return false;
-
+    
 }
 
 
-//Three cases:
+//Two cases:
 //Middle of list
 //Head of list
-//Tail of list
 bool TextClass::insertKey(char key){
     if(iter == nullptr)
         return false;
-
-
-
+    
     //Head of list, insert
     if(iter == head) {
         Link* newLink = new Link(key, nullptr, head);
@@ -138,34 +147,41 @@ bool TextClass::insertKey(char key){
         head = newLink;
         return true;
     }
-
+    
     //Middle of list, insert
     //Insert at index before iter
     Link* tmp = new Link(key, iter->getPrev(), iter);
     iter->getPrev()->setNext(tmp);
     iter->setPrev(tmp);
     return true;
-
-
-
-
-    /*
-    //If p is nullptr, do nothing and return
-    if(!iter->getPrev())
-        return false;
-    else{
-        Link* inserted = iter->getPrev();
-        inserted->setVal(key);
-        return true;
-    }
-     */
 }
 
 bool TextClass::isEmpty(){return (head && tail);}
 
-bool deleteIter(){}
+bool TextClass::deleteIter(){
+    if(iter == nullptr)
+        return false;
+    //Iter is head
+   if(iter == head)
+       deleteHead();
+    //Iter is tail
+    else if(iter == tail)
+       deleteTail();
+    //Iter is other
+    else{
+        Link*tmp = iter;
+        tmp->getPrev()->setNext(tmp->getNext());
+        tmp->getNext()->setPrev(tmp->getPrev());
+        delete tmp;
+    }
+    
+    
+    
+    iter = nullptr;
+    return true;
+}
 
-bool deleteKey(char key){}
+//bool deleteKey(char key){}
 
 string TextClass::displayList(){
     ostringstream list;
@@ -175,10 +191,10 @@ string TextClass::displayList(){
         //Add value to list separated by space
         list << tmp->getVal();
         //Causes head to be nullptr, not good!!!
-
+        
         tmp = tmp->getNext();
     }
-
-
+    
+    
     return list.str();
 }

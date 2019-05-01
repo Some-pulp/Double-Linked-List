@@ -1,15 +1,15 @@
 #include "Link.h"
 
 Link::Link(char val) {
-	this->val = val;
-	n = nullptr;
-	p = nullptr;
+    this->val = val;
+    n = nullptr;
+    p = nullptr;
 }
 
-Link::Link(char value, Link* next, Link* prev){
-	val = value;
-	n = next;
-	p = prev;
+Link::Link(char value, Link* prev, Link* next){
+    val = value;
+    n = next;
+    p = prev;
 }
 
 void Link::setPrev(Link* prev) { p = prev; }
